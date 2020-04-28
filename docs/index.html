@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+<head>
+    <title>Static Judge</title>
+</head>
+<body>
+<script type="text/javascript">
+    // load problems in a file on load
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get('id');
+    console.log(id);
+    function loadJSON(filePath, success, error) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    if (success)
+                        success(JSON.parse(xhr.responseText));
+            } else {
+                if (error)
+                    error(xhr);
+                }
+            }
+        };
+        xhr.open("GET", filePath, true);
+        xhr.send();
+    }
+    var a,b;
+    loadJSON('data/'+id+'.json',a,b);
+    console.log(a);
+</script>
+</body>
+</html>
