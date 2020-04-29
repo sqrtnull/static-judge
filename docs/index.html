@@ -86,7 +86,8 @@
     }
     function compute_hash(string) {
         var hash = 5381;
-        for(c in string) {
+        for(i in string) {
+            var c=string[i];
             hash = ((hash<<5)+hash)+c.charCodeAt(0);
         }
         return hash.toString(36);

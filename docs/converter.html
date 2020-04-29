@@ -31,10 +31,10 @@
 
     function init() {
         document.getElementById('block').value='A';
-        document.getElementById('problem').value=0;
-        document.getElementById('id').value=0;
+        document.getElementById('problem').value='0';
+        document.getElementById('id').value='0';
         document.getElementById('p').value='X';
-        document.getElementById('ans').value=0;
+        document.getElementById('ans').value='0';
         document.getElementById('link').value='';
     }
     var data = {};
@@ -56,7 +56,8 @@
     }
     function compute_hash(string) {
         var hash = 5381;
-        for(c in string) {
+        for(i in string) {
+            var c=string[i];
             hash = ((hash<<5)+hash)+c.charCodeAt(0);
         }
         return hash.toString(36);
