@@ -27,6 +27,7 @@
     <br>
     <button onclick="copy()">Copy</button>
     <button onclick="reverse()">Reverse</button>
+    <button onclick="add_link()">Add Link</button>
 <script type="text/javascript">
 
     function init() {
@@ -71,6 +72,10 @@
     function reverse() {
         var link = document.getElementById('link');
         data = JSON.parse(link.value);
+    }
+    function add_link() {
+        var link = document.getElementById('link');
+        link.value = 'https://sqrtnull.github.io/static-judge/?id=Judge&data=' + link.value;
     }
 
     
