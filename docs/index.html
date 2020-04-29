@@ -70,7 +70,7 @@
     function check(button,hash,id_str) {
         var problem = button.parentNode;
         var input = button.previousSibling;
-        if(compute_hash(input.value+id_str)==hash) {
+        if(compute_hash(id_str+input.value)==hash) {
             var ans = document.createTextNode('Answer: '+input.value);
             problem.insertBefore(ans,input);
             problem.insertBefore(document.createElement('br'),input);
