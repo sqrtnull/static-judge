@@ -4,32 +4,93 @@
 <head>
     <title>Static Judge</title>
 </head>
-<body>
+<style type="text/css">
+    div.problem {
+        border: 1px solid black;
+    }
+    div.problem_AC {
+        border: 5px solid lightgreen;
+    }
+    div.problem_WA {
+        border: 5px solid red;
+    }
+</style>
+<body onload="init()">
+    <h1 id="title">Title</h1>
+<b id="base"></b>
 <script type="text/javascript">
     // load problems in a file on load
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get('id');
-    console.log(id);
-    function loadJSON(filePath, success, error) {
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    if (success)
-                        success(JSON.parse(xhr.responseText));
-            } else {
-                if (error)
-                    error(xhr);
-                }
-            }
-        };
-        xhr.open("GET", filePath, true);
-        xhr.send();
+    const raw_data = JSON.parse(urlParams.get('data'));
+
+    function init() {
+        console.log(raw_data);
+        document.getElementById('title').innerHTML = id;
+        const base = document.getElementById('base');
+        for(block in raw_data) {
+            base.appendChild(construct_block(block,raw_data[block]));
+        }
     }
-    var a,b;
-    loadJSON('data/'+id+'.json',a,b);
-    console.log(a);
+    function construct_block(name,block) {
+        console.log(name,block);
+        var block_node = document.createElement('div');
+        var block_title = document.createElement('h2');
+        block_title.innerHTML = name;
+        // block_node.appendChild(document.createElement('br'));
+        block_node.appendChild(block_title);
+        for(problem in block) {
+            block_node.appendChild(construct_problem(problem,block[problem]));
+            block_node.appendChild(document.createElement('br'));
+        }
+        return block_node;
+    }
+    function construct_problem(name,problem) {
+        console.log(name,problem);
+        var problem_node = document.createElement('div');
+        problem_node.className = 'problem';
+        var id = problem.id;
+        var hash = problem.hash;
+        var p = problem.p;
+        var text = document.createTextNode(name+': '+p);
+        problem_node.appendChild(text);
+
+        var input = document.createElement('input');
+        input.setAttribute('type', 'text');
+        var button = document.createElement('button');
+        button.innerHTML = 'Submit';
+        button.setAttribute('onclick', 'check(this,\''+hash.toString()+'\',\''+id.toString()+'\')');
+
+        problem_node.appendChild(document.createElement('br'));
+        problem_node.appendChild(input);
+        problem_node.appendChild(button);
+        return problem_node;
+    }
+    function check(button,hash,id_str) {
+        var problem = button.parentNode;
+        var input = button.previousSibling;
+        if(compute_hash(input.value+id_str)==hash) {
+            var ans = document.createTextNode('Answer: '+input.value);
+            problem.insertBefore(ans,input);
+            problem.insertBefore(document.createElement('br'),input);
+            input.remove(); button.remove();
+            problem.className = 'problem_AC';
+            var verdict = document.createTextNode('AC');
+            problem.appendChild(verdict);
+        } else {
+            problem.className = 'problem_WA';
+            var verdict = document.createTextNode('WA');
+            problem.appendChild(verdict);
+        }
+    }
+    function compute_hash(string) {
+        var hash = 5381;
+        for(c in string) {
+            hash = ((hash<<5)+hash)+c.charCodeAt(0);
+        }
+        return hash.toString(36);
+    }
 </script>
 </body>
 </html>

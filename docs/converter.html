@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+<head>
+    <style type="text/css">
+        textarea.a {
+            resize: none;
+            width: 80vw;
+            height: 20vw;
+            word-break: break-all;
+        }
+    </style>
+    <title>Static Judge</title>
+</head>
+<body onload="init()">
+    <h1 id="title">Converter</h1>
+    <b>Block, Problem, id, p, ans</b> <br>
+    <input type="text" id="block" value="A">
+    <input type="text" id="problem" value="0"> <br>
+    <input type="text" id="id" value="0">
+    <input type="text" id="p" value="X">
+    <input type="text" id="ans" value="0">
+    <button onclick="add()">Add</button>
+    <br>
+    <br>
+    <textarea class='a' id="link"></textarea>
+    <br>
+    <button onclick="copy()">Copy</button>
+    <button onclick="reverse()">Reverse</button>
+<script type="text/javascript">
+
+    function init() {
+        document.getElementById('block').value='A';
+        document.getElementById('problem').value=0;
+        document.getElementById('id').value=0;
+        document.getElementById('p').value='X';
+        document.getElementById('ans').value=0;
+        document.getElementById('link').value='';
+    }
+    var data = {};
+    function add() {
+        var block = document.getElementById('block');
+        var problem = document.getElementById('problem');
+        var id = document.getElementById('id');
+        var p = document.getElementById('p');
+        var ans = document.getElementById('ans');
+        var link = document.getElementById('link');
+        data[block.value] = data[block.value] || {};
+        data[block.value][problem.value] = data[block.value][problem.value] || {};
+        data[block.value][problem.value].id=parseInt(id.value);
+        data[block.value][problem.value].p=p.value;
+        data[block.value][problem.value].hash=compute_hash(id.value+ans.value);
+        link.value = JSON.stringify(data);
+        problem.value = (parseInt(problem.value)+1).toString();
+        id.value = (parseInt(id.value)+1).toString();
+    }
+    function compute_hash(string) {
+        var hash = 5381;
+        for(c in string) {
+            hash = ((hash<<5)+hash)+c.charCodeAt(0);
+        }
+        return hash.toString(36);
+    }
+    function copy() {
+        var link = document.getElementById('link');
+        link.select();
+        link.setSelectionRange(0,99999);
+        document.execCommand('copy');
+    }
+    function reverse() {
+        var link = document.getElementById('link');
+        data = JSON.parse(link.value);
+    }
+
+    
+</script>
+</body>
+</html>
